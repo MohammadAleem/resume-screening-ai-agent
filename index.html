@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Resume Screening AI Agent</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🤖 Resume AI Agent</h1>
+    <p class="subtitle">Powered by LLaMA 3 via Groq API</p>
+
+    <div class="card">
+      <label>📋 Job Description</label>
+      <textarea id="jobDesc" rows="6"
+        placeholder="Paste the job requirements here..."></textarea>
+
+      <label>📄 Upload Resume (PDF only)</label>
+      <input type="file" id="resumeFile" accept=".pdf" />
+
+      <button id="screenBtn" onclick="screenResume()">🔍 Screen Resume</button>
+    </div>
+
+    <div id="loading" class="hidden">
+      <div class="spinner"></div>
+      <p>Analyzing resume with AI...</p>
+    </div>
+
+    <div id="result" class="hidden">
+      <div id="decision-banner"></div>
+      <div class="card result-card">
+        <div class="score-row">
+          <span>Match Score:</span>
+          <strong id="score"></strong>
+        </div>
+        <div class="skills-row">
+          <div>
+            <h3>✅ Matched Skills</h3>
+            <ul id="matched"></ul>
+          </div>
+          <div>
+            <h3>❌ Missing Skills</h3>
+            <ul id="missing"></ul>
+          </div>
+        </div>
+        <div class="summary-box">
+          <h3>📝 AI Summary</h3>
+          <p id="summary"></p>
+        </div>
+        <div class="hardware-note">
+          📡 Arduino hardware signal triggered!
+        </div>
+      </div>
+    </div>
+
+    <div id="error-box" class="hidden card error-card">
+      <p id="error-msg"></p>
+    </div>
+  </div>
+
+  <script>
+    async function screenResume() {
+      const jobDesc = document.getElementById('jobDesc').value.trim();
+      const file    = document.getElementById('resumeFile').files[0];
+      const btn     = document.getElementById('screenBtn');
+
+      if (!jobDesc) { alert('Please enter a job description.'); return; }
+      if (!file)    { alert('Please upload a resume PDF.'); return; }
+
+      // Show loading
+      btn.disabled = true;
+      document.getElementById('loading').classList.remove('hidden');
+      document.getElementById('result').classList.add('hidden');
+      document.getElementById('error-box').classList.add('hidden');
+
+      const formData = new FormData();
+      formData.append('job_description', jobDesc);
+      formData.append('resume', file);
+
+      try {
+        const res  = await fetch('/screen', { method: 'POST', body: formData });
+        const data = await res.json();
+
+        document.getElementById('loading').classList.add('hidden');
+
+        if (data.error) {
+          document.getElementById('error-msg').textContent = '⚠️ ' + data.error;
+          document.getElementById('error-box').classList.remove('hidden');
+        } else {
+          displayResult(data);
+        }
+      } catch (e) {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('error-msg').textContent = '⚠️ Network error. Is Flask running?';
+        document.getElementById('error-box').classList.remove('hidden');
+      }
+
+      btn.disabled = false;
+    }
+
+    function displayResult(data) {
+      const isSelected = data.decision === 'SELECTED';
+      const banner = document.getElementById('decision-banner');
+      banner.textContent = isSelected ? '✅ SELECTED' : '❌ REJECTED';
+      banner.className   = isSelected ? 'banner selected' : 'banner rejected';
+
+      document.getElementById('score').textContent = data.score + ' / 100';
+
+      const matched = document.getElementById('matched');
+      matched.innerHTML = (data.matched_skills || [])
+        .map(s => `<li>${s}</li>`).join('') || '<li>None</li>';
+
+      const missing = document.getElementById('missing');
+      missing.innerHTML = (data.missing_skills || [])
+        .map(s => `<li>${s}</li>`).join('') || '<li>None</li>';
+
+      document.getElementById('summary').textContent = data.summary;
+      document.getElementById('result').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
