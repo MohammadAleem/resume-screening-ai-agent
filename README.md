@@ -45,6 +45,8 @@ An AI-powered resume screening system built as Engineering Project.
 - ✅ SELECTED → Green LED ON + Happy Beep
 - ❌ REJECTED → Red LED ON + Low Beep
 
+
 ## 👨‍💻 Developer
-- Engineering Student
-- Project: Resume Screening AI Agent
+**Mohammad Aleem**
+CSE Engineering Student | Backend + DevOps
+🔗 [GitHub](https://github.com/MohammadAleem)
