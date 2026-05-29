@@ -2,7 +2,9 @@
 AI-powered resume screening system using LLaMA 3, Flask, and Arduino
 # 🤖 Resume Screening AI Agent
 
-An AI-powered resume screening system built as Engineering Project.
+An AI-powered resume screening system that analyzes resumes 
+against job descriptions using LLaMA 3, built with Flask backend 
+and real-time Arduino hardware feedback.
 
 ## 🚀 Features
 - Upload PDF resumes and screen them instantly
