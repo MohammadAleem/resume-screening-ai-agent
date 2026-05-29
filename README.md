@@ -1,3 +1,4 @@
+![CI Pipeline](https://github.com/MohammadAleem/resume-screening-ai-agent/actions/workflows/ci.yml/badge.svg)
 # resume-screening-ai-agent
 AI-powered resume screening system using LLaMA 3, Flask, and Arduino
 # 🤖 Resume Screening AI Agent
