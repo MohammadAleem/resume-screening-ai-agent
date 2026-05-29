@@ -43,6 +43,10 @@ and real-time Arduino hardware feedback.
 5. Create `.env` file and add your Groq API key: `GROQ_API_KEY=your_key_here`
 6. Run: `python app.py`
 7. Open browser: `http://127.0.0.1:5000`
+8. ## 🐳 Run with Docker
+
+Make sure Docker is installed, then:
+App will be running at `http://localhost:5000`
 
 ## 📸 Result
 - ✅ SELECTED → Green LED ON + Happy Beep
